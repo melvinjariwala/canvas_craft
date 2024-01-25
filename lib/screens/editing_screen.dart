@@ -1,9 +1,11 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:canvas_craft/models/text_data.dart';
 import 'package:canvas_craft/widgets/text_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:photo_view/photo_view.dart';
 import 'package:photo_view/photo_view_gallery.dart';
 import 'dart:typed_data';
@@ -24,6 +26,7 @@ class _EditingScreenState extends State<EditingScreen> {
   int selectedTextIndex = -1;
   List<List<TextData>> undoStack = [];
   List<List<TextData>> redoStack = [];
+  File? backgroundImage;
 
   Future<Uint8List?> _capturePng() async {
     try {
@@ -73,12 +76,28 @@ class _EditingScreenState extends State<EditingScreen> {
     }
   }
 
+  Future<void> _pickBackgroundImage() async {
+    final picker = ImagePicker();
+    final pickedFile = await picker.pickImage(source: ImageSource.gallery);
+    if (pickedFile != null) {
+      setState(() {
+        backgroundImage = File(pickedFile.path);
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: const Text("Canvas Craft"),
         centerTitle: true,
+        leading: IconButton(
+            onPressed: () {
+              _pickBackgroundImage();
+            },
+            tooltip: "Import Image",
+            icon: const Text("Import")),
         actions: [
           IconButton(
               onPressed: () {
@@ -96,7 +115,9 @@ class _EditingScreenState extends State<EditingScreen> {
               itemCount: 1,
               builder: (context, index) {
                 return PhotoViewGalleryPageOptions(
-                    imageProvider: const AssetImage('assets/blank.jpg'),
+                    imageProvider: backgroundImage != null
+                        ? FileImage(backgroundImage!)
+                        : AssetImage('assets/blank.jpg') as ImageProvider,
                     minScale: PhotoViewComputedScale.contained,
                     maxScale: PhotoViewComputedScale.covered * 3);
               },
@@ -194,6 +215,7 @@ class _EditingScreenState extends State<EditingScreen> {
                       }
                     });
                   },
+                  tooltip: "Add Text",
                   child: const Icon(Icons.text_fields),
                 ),
               ],
