@@ -14,8 +14,9 @@ class MyApp extends StatelessWidget {
       title: 'Flutter Demo',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
+          colorScheme: ColorScheme.fromSwatch().copyWith(
+              primary: const Color.fromARGB(255, 0, 97, 81),
+              secondary: const Color.fromARGB(255, 0, 97, 81))),
       home: const EditingScreen(),
     );
   }

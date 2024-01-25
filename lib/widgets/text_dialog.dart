@@ -1,5 +1,6 @@
 import 'package:canvas_craft/models/text_data.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 
 class TextDialog extends StatefulWidget {
   final TextData? textData;
@@ -70,6 +71,25 @@ class _TextDialogState extends State<TextDialog> {
                       })),
               Text(_boxSize.toStringAsFixed(1))
             ],
+          ),
+          Row(
+            children: [
+              const Text("Color : "),
+              const SizedBox(width: 10.0),
+              GestureDetector(
+                onTap: () {
+                  _showColorPicker();
+                },
+                child: Container(
+                  width: 30.0,
+                  height: 30.0,
+                  decoration: BoxDecoration(
+                      color: _textColor,
+                      border: Border.all(color: Colors.white60, width: 3.0),
+                      borderRadius: BorderRadius.circular(25.0)),
+                ),
+              )
+            ],
           )
         ],
       ),
@@ -95,8 +115,32 @@ class _TextDialogState extends State<TextDialog> {
         boxSize: _boxSize);
   }
 
-  // String getDisplayText() => _displayText;
-  // Color getTextColor() => _textColor;
-  // double getFontSize() => _fontSize;
-  // double getBoxSize() => _boxSize;
+  void _showColorPicker() {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: const Text("Pick a color"),
+          content: SingleChildScrollView(
+            child: ColorPicker(
+              pickerColor: _textColor,
+              onColorChanged: (Color color) {
+                setState(() {
+                  _textColor = color;
+                });
+              },
+              pickerAreaHeightPercent: 0.8,
+            ),
+          ),
+          actions: [
+            TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: const Text("OK"))
+          ],
+        );
+      },
+    );
+  }
 }

@@ -21,7 +21,8 @@ class _EditingScreenState extends State<EditingScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Photo editor"),
+        title: const Text("Canvas Craft"),
+        centerTitle: true,
       ),
       body: Stack(
         children: [
@@ -40,7 +41,7 @@ class _EditingScreenState extends State<EditingScreen> {
                 return PhotoViewGalleryPageOptions(
                     imageProvider: const AssetImage('assets/blank.jpg'),
                     minScale: PhotoViewComputedScale.contained,
-                    maxScale: PhotoViewComputedScale.covered * 2);
+                    maxScale: PhotoViewComputedScale.covered * 3);
               },
               scrollPhysics: const BouncingScrollPhysics(),
               backgroundDecoration: const BoxDecoration(color: Colors.black),
