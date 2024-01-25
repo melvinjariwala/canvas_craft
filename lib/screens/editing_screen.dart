@@ -79,7 +79,10 @@ class _EditingScreenState extends State<EditingScreen> {
                       textData.text,
                       style: TextStyle(
                           color: textData.textColor,
-                          fontSize: textData.fontSize),
+                          fontSize: textData.fontSize,
+                          fontFamily: textData.fontStyle != "Default"
+                              ? textData.fontStyle
+                              : null),
                     ),
                   ),
                 ));
@@ -96,12 +99,7 @@ class _EditingScreenState extends State<EditingScreen> {
               children: [
                 FloatingActionButton(
                   onPressed: () {
-                    if (undoStack.isNotEmpty) {
-                      setState(() {
-                        redoStack.add(List.from(textDataList));
-                        textDataList = List.from(undoStack.removeLast());
-                      });
-                    }
+                    _performUndo();
                   },
                   tooltip: "Undo",
                   child: const Icon(Icons.undo),
@@ -109,12 +107,7 @@ class _EditingScreenState extends State<EditingScreen> {
                 const SizedBox(height: 16.0),
                 FloatingActionButton(
                   onPressed: () {
-                    if (redoStack.isNotEmpty) {
-                      setState(() {
-                        undoStack.add(List.from(textDataList));
-                        textDataList = List.from(redoStack.removeLast());
-                      });
-                    }
+                    _performRedo();
                   },
                   tooltip: "Redo",
                   child: const Icon(Icons.redo),
@@ -141,6 +134,24 @@ class _EditingScreenState extends State<EditingScreen> {
         ],
       ),
     );
+  }
+
+  void _performRedo() {
+    if (redoStack.isNotEmpty) {
+      setState(() {
+        undoStack.add(List.from(textDataList));
+        textDataList = List.from(redoStack.removeLast());
+      });
+    }
+  }
+
+  void _performUndo() {
+    if (undoStack.isNotEmpty) {
+      setState(() {
+        redoStack.add(List.from(textDataList));
+        textDataList = List.from(undoStack.removeLast());
+      });
+    }
   }
 
   void _addUndoSnapshot() {

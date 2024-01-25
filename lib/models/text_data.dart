@@ -6,13 +6,15 @@ class TextData {
   Color textColor;
   double fontSize;
   double boxSize;
+  String fontStyle;
 
   TextData(
       {required this.text,
       required this.position,
       required this.textColor,
       required this.fontSize,
-      required this.boxSize});
+      required this.boxSize,
+      required this.fontStyle});
 
   TextData snapshot() {
     return TextData(
@@ -20,6 +22,7 @@ class TextData {
         position: position,
         textColor: textColor,
         fontSize: fontSize,
-        boxSize: boxSize);
+        boxSize: boxSize,
+        fontStyle: fontStyle);
   }
 }
